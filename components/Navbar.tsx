@@ -16,6 +16,11 @@ export const Navbar = () => {
             <p /> Sobre
           </Link>
         </li>
+        <li>
+          <Link href="/todos">
+            <p /> Todos
+          </Link>
+        </li>
       </ul>
     </div>
   );
