@@ -1,35 +1,59 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Link from 'next/link'
 
-export default function Todo() {
-  const router = useRouter();
+export async function getStaticProps(context: { params: any }) {
+  const { params } = context
+  const data = await fetch(
+    `https://jsonplaceholder.typicode.com/todos/${params.todoId}`,
+  )
 
-  const todoId = router.query.todoId;
+  const todo = await data.json()
 
+  return {
+    props: { todo },
+  }
+}
+
+export async function getStaticPaths() {
+  const response = await fetch('https://jsonplaceholder.typicode.com/todos/')
+  const data = await response.json()
+
+  const paths = data.map((todo: { id: any }) => {
+    return {
+      params: {
+        todoId: `${todo.id}`,
+      },
+    }
+  })
+
+  return { paths, fallback: false }
+}
+
+export default function Todo({ todo }) {
   return (
     <>
-      <Link href="/">
-        <p>Voltar</p>
+      <Link href="/todos">
+        <a>Voltar</a>
       </Link>
-      <h1>Exibidino o todo : {todoId}</h1>
+      <h1>Exibindo o todo: {todo.id}</h1>
+      <p>Título: {todo.title}</p>
       <p>
-        Comentário: la la la{" "}
-        <Link href={`/todos/${todoId}/comments/1`}>
-          <span>Detalhes</span>
+        Comentário: lá lá lá
+        <Link href={`/todos/${todo.id}/comment/1`}>
+          <a>Detalhes</a>
         </Link>
       </p>
       <p>
-        Comentário: le le le{" "}
-        <Link href={`/todos/${todoId}/comments/2`}>
-          <span>Detalhes</span>
+        Comentário: le le le
+        <Link href={`/todos/${todo.id}/comment/2`}>
+          <a>Detalhes</a>
         </Link>
       </p>
       <p>
-        Comentário: li li li{" "}
-        <Link href={`/todos/${todoId}/comments/3`}>
-          <span>Detalhes</span>
+        Comentário: li li li
+        <Link href={`/todos/${todo.id}/comment/3`}>
+          <a>Detalhes</a>
         </Link>
       </p>
     </>
-  );
+  )
 }
