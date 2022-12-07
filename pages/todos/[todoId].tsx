@@ -1,3 +1,4 @@
+import { AnyAaaaRecord } from 'dns'
 import Link from 'next/link'
 
 export async function getStaticProps(context: { params: any }) {
@@ -28,7 +29,7 @@ export async function getStaticPaths() {
   return { paths, fallback: false }
 }
 
-export default function Todo({ todo }) {
+export default function Todo({ todo } : any) {
   return (
     <>
       <Link href="/todos">
